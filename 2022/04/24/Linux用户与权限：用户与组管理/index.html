@@ -1,0 +1,641 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Linux用户与权限：用户与组管理 | ArgsのBlog</title><meta name="keywords" content="Linux"><meta name="author" content="Maxwaves"><meta name="copyright" content="Maxwaves"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Linux用户与权限：用户与组管理用户管理groups 查看当前登录用户的组内成员groups gliethttp 查看gliethttp用户所在的组,以及组内成员whoami 查看当前登录用户名  任何用户被分配一个独特的用户id号(UID)，当用户登录时，它被分配一个主目录并 且运行一个程序(通常是一个shell程序)   没有权限许可用户不能读取、写或者执行其它用户的文件   用户帐号通常从">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux用户与权限：用户与组管理">
+<meta property="og:url" content="http://example.com/2022/04/24/Linux%E7%94%A8%E6%88%B7%E4%B8%8E%E6%9D%83%E9%99%90%EF%BC%9A%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86/index.html">
+<meta property="og:site_name" content="ArgsのBlog">
+<meta property="og:description" content="Linux用户与权限：用户与组管理用户管理groups 查看当前登录用户的组内成员groups gliethttp 查看gliethttp用户所在的组,以及组内成员whoami 查看当前登录用户名  任何用户被分配一个独特的用户id号(UID)，当用户登录时，它被分配一个主目录并 且运行一个程序(通常是一个shell程序)   没有权限许可用户不能读取、写或者执行其它用户的文件   用户帐号通常从">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg">
+<meta property="article:published_time" content="2022-04-24T02:46:16.000Z">
+<meta property="article:modified_time" content="2022-04-24T03:48:28.779Z">
+<meta property="article:author" content="Maxwaves">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2022/04/24/Linux%E7%94%A8%E6%88%B7%E4%B8%8E%E6%9D%83%E9%99%90%EF%BC%9A%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":100,"languages":{"author":"作者: Maxwaves","link":"链接: ","source":"来源: ArgsのBlog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'mediumZoom',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Linux用户与权限：用户与组管理',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-04-24 11:48:28'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.css"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.0.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/touxiang.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">10</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 娱乐</span><i class="fas fa-chevron-down expand hide"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/bangumis/"><i class="fa-fw fas fa-video"></i><span> 追番</span></a></li><li><a class="site-page child" href="/cinemas/"><i class="fa-fw fas fa-desktop"></i><span> 追剧</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-heartbeat"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">ArgsのBlog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 娱乐</span><i class="fas fa-chevron-down expand hide"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/bangumis/"><i class="fa-fw fas fa-video"></i><span> 追番</span></a></li><li><a class="site-page child" href="/cinemas/"><i class="fa-fw fas fa-desktop"></i><span> 追剧</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-heartbeat"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Linux用户与权限：用户与组管理</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-04-24T02:46:16.000Z" title="发表于 2022-04-24 10:46:16">2022-04-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-04-24T03:48:28.779Z" title="更新于 2022-04-24 11:48:28">2022-04-24</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Linux用户与权限：用户与组管理"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Linux用户与权限：用户与组管理"><a href="#Linux用户与权限：用户与组管理" class="headerlink" title="Linux用户与权限：用户与组管理"></a>Linux用户与权限：用户与组管理</h1><h2 id="用户管理"><a href="#用户管理" class="headerlink" title="用户管理"></a>用户管理</h2><p>groups 查看当前登录用户的组内成员<br>groups gliethttp 查看gliethttp用户所在的组,以及组内成员<br>whoami 查看当前登录用户名</p>
+<ul>
+<li><p>任何用户被分配一个独特的用户id号(UID)，当用户登录时，它被分配一个主目录并 且运行一个程序(通常是一个shell程序) </p>
+</li>
+<li><p>没有权限许可用户不能读取、写或者执行其它用户的文件 </p>
+</li>
+<li><p>用户帐号通常从UID 500开始(员工辞职后若删除原ID也删除，再重新建立除非指定， 否则顺后面一位数字，例如503</p>
+</li>
+<li><p>每一个文件都属于一个UID和GID所有（每一个用户都有一个匹配的用户和组） </p>
+</li>
+<li><p>任何进程运行时都带一个UID和一个或多个GID标识符 </p>
+<ul>
+<li>通常决定于哪个用户执行这个进程 </li>
+</ul>
+</li>
+<li><p>三种访问类别 </p>
+<ul>
+<li>运行的进程跟文件有着同样的UID（user) </li>
+<li>运行的进程跟文件有着同样的GID(group) </li>
+<li>其它进程(other）</li>
+</ul>
+</li>
+</ul>
+<h3 id="1-添加新用户-useradd-adduser"><a href="#1-添加新用户-useradd-adduser" class="headerlink" title="1. 添加新用户 useradd/adduser"></a>1. 添加新用户 useradd/adduser</h3><ul>
+<li>格式:useradd/adduser [选项] [用户名]</li>
+</ul>
+<p>参数： </p>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-u</td>
+<td>指定用户的UID值</td>
+</tr>
+<tr>
+<td>-g</td>
+<td>指定用户所属的默认组</td>
+</tr>
+<tr>
+<td>-G</td>
+<td>指定用户附加组</td>
+</tr>
+<tr>
+<td>-m</td>
+<td>若用户主目录不存在则建立用户主目录</td>
+</tr>
+<tr>
+<td>-d</td>
+<td>指定主目录</td>
+</tr>
+<tr>
+<td>-e</td>
+<td>指定用户帐号有效日期(YYYY-MM-DD)</td>
+</tr>
+<tr>
+<td>-s</td>
+<td>指定默认的shell类型</td>
+</tr>
+<tr>
+<td>-M</td>
+<td>不建立用户主目录</td>
+</tr>
+</tbody></table>
+<p>实例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">#useradd u2</span><br><span class="line"></span><br><span class="line">#useradd -g g2 u2 </span><br><span class="line"></span><br><span class="line">#useradd -e 2019-01-12 u3</span><br><span class="line"></span><br><span class="line">#useradd -g group1 -e 12/12/2019 user1</span><br><span class="line">#passwd user1</span><br><span class="line"></span><br><span class="line">#useradd -G staff tom </span><br><span class="line">#passwd tom</span><br><span class="line"></span><br><span class="line">#useradd -G ftpgrp -d /var/ftp2 -s /sbin/nologin -M ftp1</span><br><span class="line">#passwd ftp1</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-设置用户口令passwd"><a href="#2-设置用户口令passwd" class="headerlink" title="2. 设置用户口令passwd"></a>2. 设置用户口令passwd</h3><ul>
+<li><p>格式：passwd [选项] [用户名] </p>
+</li>
+<li><p>passwd //设置密码、激活用户；//注：新建的帐号都为禁用状态；</p>
+</li>
+<li><p>注：root用户可以更改所在用户的密码，而普通的用户只能修改本身的密码；</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-l</td>
+<td>锁定帐号：即不能用该帐号登录</td>
+</tr>
+<tr>
+<td>-u</td>
+<td>解锁帐号；</td>
+</tr>
+<tr>
+<td>-d</td>
+<td>删除帐号的密码，超级用户使用</td>
+</tr>
+<tr>
+<td>-k</td>
+<td>保持身份验证不过期</td>
+</tr>
+<tr>
+<td>-e</td>
+<td>终止指名账户的密码</td>
+</tr>
+<tr>
+<td>-w</td>
+<td>在密码过期前多少天提醒用户</td>
+</tr>
+<tr>
+<td>-x/-n</td>
+<td>密码的最长/最短有效时限</td>
+</tr>
+<tr>
+<td>-f</td>
+<td>强制执行操作</td>
+</tr>
+</tbody></table>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#passwd –x 60 user 设置 user用户的密码有效期</span><br><span class="line"></span><br><span class="line">#passwd -w 10 user 设置 user 用户的密码失效前10天开始提醒用户 </span><br><span class="line"></span><br><span class="line">#passwd -l user 可以锁定用户 user  </span><br><span class="line"></span><br><span class="line">#passwd -s user 显示用户user 当前已被锁定 </span><br><span class="line"></span><br><span class="line">#passwd -u user 解除user用户帐号的锁定</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-批量用户管理"><a href="#3-批量用户管理" class="headerlink" title="3. 批量用户管理"></a>3. 批量用户管理</h3><h4 id="批量创建用户帐号"><a href="#批量创建用户帐号" class="headerlink" title="批量创建用户帐号"></a>批量创建用户帐号</h4><p>输入 # newusers &lt; new 批量新建用户帐号 </p>
+<p>格式– newusers   &lt;filename&gt;</p>
+<p>-filename的格式与 /etc/passwd 一致</p>
+<p>举例 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#vi userfile.txt</span><br><span class="line">#cat userfile.txt </span><br><span class="line">user1:\x:1001:1001::/home/user1:/bin/bash</span><br><span class="line">user2:x\:1002:1002::/home/user2:/bin/bash</span><br><span class="line">ftpuser1:\x:2001:2001::/home/ftpuser1:/sbin/nologin</span><br><span class="line">ftpuser2:\x:2002:2002::/home/ftpuser2:/sbin/nologin </span><br><span class="line">#newusers userfile.txt</span><br></pre></td></tr></table></figure>
+
+<h4 id="批量设置密码"><a href="#批量设置密码" class="headerlink" title="批量设置密码"></a>批量设置密码</h4><p>输入 # <code>pwunconv</code> 暂时取消shadow加密  </p>
+<p>#<code>chpasswd &lt; newpasswd</code> 批量设置用户密码  </p>
+<p>#<code>pwconv</code> 恢复用户密码</p>
+<p>格式 – <code>chpasswd &lt; &lt;filename\&gt;</code></p>
+<p>-filename 每一行的格式：</p>
+<p><code>username:password</code></p>
+<p>username必须是系统上已存在的用户</p>
+<p>举例 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#vi userpwdfile.txt; chmod 600 userpwdfile.txt</span><br><span class="line">#cat userpwdfile.txt </span><br><span class="line">user1:123456 </span><br><span class="line">user2:passwd </span><br><span class="line">ftpuser1:123qaz </span><br><span class="line">ftpuser2:xsw321 </span><br><span class="line">#chpasswd &lt; userpwdfile.txt</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-删除用户"><a href="#4-删除用户" class="headerlink" title="4.删除用户"></a>4.删除用户</h3><ul>
+<li><p>格式： userdel [选项] [ 用户名] </p>
+</li>
+<li><p>选项： </p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-r</td>
+<td>删除用户并同时删除用户主目录及本地邮件 存储文件等信息</td>
+</tr>
+<tr>
+<td>-f</td>
+<td>强制删除用户</td>
+</tr>
+</tbody></table>
+<p>实例：</p>
+<p>#<code>userdel -r user1</code>  </p>
+<p><strong>注意：如果只是临时禁止用户登录系统，那么不用删除账户，可以采取 临时查封用户账号的办法。编辑口令文件/etc/passwd，将*放在要被查封 用户的加密口领域，这样该用户就不能登录系统了。但是主目录，文件 以及组信息还是保留的。如果以后需要修改，将*改为x</strong></p>
+<h3 id="5-修改用户信息"><a href="#5-修改用户信息" class="headerlink" title="5.修改用户信息"></a>5.修改用户信息</h3><ul>
+<li><p>格式： usermod [选项] [用户名] </p>
+</li>
+<li><p>选项：</p>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-l</td>
+<td>更改用户名</td>
+</tr>
+<tr>
+<td>-d</td>
+<td>更改用户主目录</td>
+</tr>
+<tr>
+<td>G</td>
+<td>修改附加组</td>
+</tr>
+<tr>
+<td>-g</td>
+<td>修改主组</td>
+</tr>
+<tr>
+<td>-L</td>
+<td>锁定用户帐号(不能登录)</td>
+</tr>
+<tr>
+<td>-U</td>
+<td>解锁用户帐号</td>
+</tr>
+<tr>
+<td>-c</td>
+<td>改变用户的表述信息</td>
+</tr>
+<tr>
+<td>-e</td>
+<td>设置用户账户的过期时间</td>
+</tr>
+<tr>
+<td>-s</td>
+<td>改变用户的默认shell</td>
+</tr>
+</tbody></table>
+<p>实例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#usermod -d /abc u3</span><br><span class="line"> usermod -G group2 u3 </span><br><span class="line">#usermod -l user3 u3</span><br><span class="line"></span><br><span class="line">#usermod -L user1 </span><br><span class="line">#usermod -U user1</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="组管理"><a href="#组管理" class="headerlink" title="组管理"></a>组管理</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><ul>
+<li><p>用户指派给组</p>
+</li>
+<li><p>每一个组被分配一个独特的组ID(GID) </p>
+</li>
+<li><p>GID保存在/etc/group中，加密后的密码存放在/etc/gshadow中</p>
+</li>
+<li><p>每一个用户都有自己的私有组 </p>
+</li>
+<li><p>同一个组中的所有用户能共享属于这个组的文件</p>
+</li>
+</ul>
+<h3 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h3><ol>
+<li>分类法一：</li>
+</ol>
+<ul>
+<li><p>标准组 </p>
+<ul>
+<li><p>标准组可以容纳多个用户 </p>
+</li>
+<li><p>若使用标准组，在创建一个新的用户时就应该指定他所属于的组</p>
+</li>
+</ul>
+</li>
+<li><p>私有组 </p>
+<ul>
+<li><p>私有组中只有用户自己 </p>
+</li>
+<li><p>当在创建一个新用户时， 若没有指定他所属于的组，RHEL/CentOS 就建立一个和该用户同名的私有组，且用户被分配到这个私有组中 </p>
+</li>
+<li><p>优点：防止新文件归 “公共” 组所有 </p>
+</li>
+<li><p>缺点：可能会鼓励创建 “任何人都可以访问” 的文件</p>
+</li>
+</ul>
+</li>
+</ul>
+<ol start="2">
+<li>分类法二： </li>
+</ol>
+<ul>
+<li><p>主要组群：当一个用户账户属于多个组群成员时，登录后所属的组群 便是主要组群，其他的组群是次要组群，一个用户账户只能属于一个 主要组群，即主组 </p>
+</li>
+<li><p>次要组群：也称为附加组群，一个用户账户可以属于多个次要组群</p>
+</li>
+</ul>
+<h3 id="组管理工具"><a href="#组管理工具" class="headerlink" title="组管理工具"></a>组管理工具</h3><h4 id="groupadd添加组"><a href="#groupadd添加组" class="headerlink" title="groupadd添加组"></a>groupadd添加组</h4><p>格式 # groupadd [选项] [组群名]  </p>
+<p>选项</p>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-g</td>
+<td>为组群设置GID</td>
+</tr>
+<tr>
+<td>-r</td>
+<td>创建系统组群</td>
+</tr>
+<tr>
+<td>-o</td>
+<td>允许使用和别的组群相同的GID创建组群</td>
+</tr>
+<tr>
+<td>-f</td>
+<td>即使组群已经存在，还是强制创建组群</td>
+</tr>
+<tr>
+<td>-p (密码)</td>
+<td>为新组群设置加密的密码</td>
+</tr>
+</tbody></table>
+<p>举例</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#groupadd mygroup 创建组</span><br><span class="line"></span><br><span class="line">#groupadd -r sysgroup 创建系统组群 </span><br><span class="line"></span><br><span class="line">#groupadd -g 888 group2 创建指定GID组</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="groupdel删除组"><a href="#groupdel删除组" class="headerlink" title="groupdel删除组"></a>groupdel删除组</h4><p><strong>groupdel：删除一个已存在组，但不能删主组</strong></p>
+<p>需要从系统上删除组群时，可用groupdel命令来完成这项工作，如果该组群中仍包 括某些用户，则必须先使用userdel命令删除这些用户后，才能使用groupdel命令删 除组群。如果有任何一个组群的使用者在线上就不能移除该组群。</p>
+<p>格式：# groupdel [组群名]  </p>
+<p>举例：</p>
+<p>删除组群user1</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#groupdel user1 </span><br><span class="line"></span><br><span class="line">#cat /etc/group |grep user1</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="groupmod-修改组"><a href="#groupmod-修改组" class="headerlink" title="groupmod 修改组"></a>groupmod 修改组</h4><p>格式 </p>
+<p>#groupmod [选项][组群名] </p>
+<p>选项</p>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-g</td>
+<td>设置组群</td>
+</tr>
+<tr>
+<td>-o</td>
+<td>重复使用组群GID</td>
+</tr>
+<tr>
+<td>-n(新组群名)</td>
+<td>更改组群名称</td>
+</tr>
+</tbody></table>
+<p>举例</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#groupmod -g 503 mygroup</span><br><span class="line"></span><br><span class="line">#groupmod –n newgroup mygroup</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="gpasswd设置组群密码"><a href="#gpasswd设置组群密码" class="headerlink" title="gpasswd设置组群密码"></a>gpasswd设置组群密码</h4><p>格式： gpasswd [选项][组群名]</p>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-a</td>
+<td>将一个用户加入到一个组群中</td>
+</tr>
+<tr>
+<td>-d</td>
+<td>将一个用户从一个组群中删除</td>
+</tr>
+<tr>
+<td>-r</td>
+<td>取消一个组群的组群密码</td>
+</tr>
+<tr>
+<td>-R</td>
+<td>限制其成员访问组</td>
+</tr>
+<tr>
+<td>-A(组群管理员)</td>
+<td>指定组群的管理员</td>
+</tr>
+<tr>
+<td>-M(用户)</td>
+<td>设置组群的成员列表</td>
+</tr>
+</tbody></table>
+<p>举例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> #gpasswd –A pl mygroup //将pl设为mygroup群组的管理员 </span><br><span class="line"></span><br><span class="line">$gpasswd –a aaa mygroup //pl可以向mygroup群组添加用户aaa</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="newgrp新组名"><a href="#newgrp新组名" class="headerlink" title="newgrp新组名"></a>newgrp新组名</h4><ul>
+<li><p>给组账号设置完密码后，用户登录系统，使用newgrp命令，输入给组 账号设置的密码，就可以临时添加到指定组，可以管理组用户，具有组权限。</p>
+</li>
+<li><p>使用newgrp命令可以让用户账户以另一个组群的身份进行登录，即用 相同的账户名、不同的组群身份登录系统。如果要切换，用户必须是 该组群的用户，否则无法登录指定的组群。单一用户如果要同时隶属 多个组群，需要利用交替用户的设置。如果不指定组群名称，则 newgrp命令会登录该用户名称的预设组群。</p>
+</li>
+<li><p>语法：newgrp [组群名]</p>
+</li>
+</ul>
+<p>举例： • 将用户pl以组群user的身份登录系统 • #su – pl • #id • #newgrp user • #id pl</p>
+<h2 id="用户和组的关系"><a href="#用户和组的关系" class="headerlink" title="用户和组的关系"></a>用户和组的关系</h2><ul>
+<li><p>组是用户的集合。</p>
+</li>
+<li><p>一个标准组可以容纳多个用户。</p>
+</li>
+<li><p>同一个用户可以同属于多个组，这些组可以是私有组，也可以是标准组。</p>
+</li>
+<li><p>当一个用户同属于多个组时，将这些组习惯分为 ：</p>
+<ul>
+<li><p>主组（初始组）：用户登录系统时 的组。 </p>
+</li>
+<li><p>附加组：可切换的其他组。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="练习"><a href="#练习" class="headerlink" title="练习"></a>练习</h2><p>1、创建一个用户 test </p>
+<p><code>useradd test</code> </p>
+<p>2、创建一个用户test1 指定其主组为test </p>
+<p><code>useradd -g test test1</code> </p>
+<p>3、创建一个用户 test2 指定其uid 为1000 </p>
+<p><code>useradd -u 1000 test2</code> </p>
+<p>4、将test1、test2 加入到test组中</p>
+<p><code>usermod -a -G test test1</code> </p>
+<p><code>usermod -a -G test test2</code> </p>
+<p>*5、添加一个用户 user3 uid 为600 设置其家目录在/data/user3 主组为 test 附加组为 test1 test2</p>
+<p>需要创建data 目录</p>
+<p> <code>#mkdir /data</code></p>
+<p><code>useradd -u 600 -d /data/user3 -g test user3</code></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Maxwaves</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2022/04/24/Linux%E7%94%A8%E6%88%B7%E4%B8%8E%E6%9D%83%E9%99%90%EF%BC%9A%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86/">http://example.com/2022/04/24/Linux%E7%94%A8%E6%88%B7%E4%B8%8E%E6%9D%83%E9%99%90%EF%BC%9A%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">ArgsのBlog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Linux/">Linux</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat.jpg"/></a><div class="post-qr-code-desc"></div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/04/24/Linux%E7%94%A8%E6%88%B7%E4%B8%8E%E6%9D%83%E9%99%90%EF%BC%9A%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/"><img class="prev-cover" src="https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Linux用户与权限：权限管理</div></div></a></div><div class="next-post pull-right"><a href="/2022/04/23/Linux%E6%96%87%E4%BB%B6%E4%B8%8E%E7%9B%AE%E5%BD%95%E7%AE%A1%E7%90%86%EF%BC%9A%E6%96%87%E6%9C%AC%E5%86%85%E5%AE%B9%E6%98%BE%E7%A4%BA%E4%B8%8E%E5%A4%84%E7%90%86/"><img class="next-cover" src="https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Linux文件与目录管理：文本内容显示与处理</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/03/17/Linux%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4/" title="Linux基本命令"><img class="cover" src="https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-17</div><div class="title">Linux基本命令</div></div></a></div><div><a href="/2022/03/23/Linux%E6%96%87%E4%BB%B6%E4%B8%8E%E7%9B%AE%E5%BD%95%E7%AE%A1%E7%90%86%EF%BC%9A%E6%96%87%E4%BB%B6%E4%B8%8E%E6%9F%A5%E6%89%BE/" title="Linux文件与目录管理：文件与查找"><img class="cover" src="https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-23</div><div class="title">Linux文件与目录管理：文件与查找</div></div></a></div><div><a href="/2022/04/23/Linux%E6%96%87%E4%BB%B6%E4%B8%8E%E7%9B%AE%E5%BD%95%E7%AE%A1%E7%90%86%EF%BC%9A%E5%8E%8B%E7%BC%A9%E3%80%81%E9%87%8D%E5%AE%9A%E5%90%91%E4%B8%8E%E7%AE%A1%E9%81%93/" title="Linux文件与目录管理：压缩、重定向与管道"><img class="cover" src="https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-23</div><div class="title">Linux文件与目录管理：压缩、重定向与管道</div></div></a></div><div><a href="/2022/04/23/Linux%E6%96%87%E4%BB%B6%E4%B8%8E%E7%9B%AE%E5%BD%95%E7%AE%A1%E7%90%86%EF%BC%9A%E6%96%87%E6%9C%AC%E5%86%85%E5%AE%B9%E6%98%BE%E7%A4%BA%E4%B8%8E%E5%A4%84%E7%90%86/" title="Linux文件与目录管理：文本内容显示与处理"><img class="cover" src="https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-23</div><div class="title">Linux文件与目录管理：文本内容显示与处理</div></div></a></div><div><a href="/2022/04/24/Linux%E7%94%A8%E6%88%B7%E4%B8%8E%E6%9D%83%E9%99%90%EF%BC%9A%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/" title="Linux用户与权限：权限管理"><img class="cover" src="https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-24</div><div class="title">Linux用户与权限：权限管理</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="lv-container" data-id="city" data-uid="MTAyMC81NTE4NC8zMTY1MQ=="></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Linux%E7%94%A8%E6%88%B7%E4%B8%8E%E6%9D%83%E9%99%90%EF%BC%9A%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">Linux用户与权限：用户与组管理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86"><span class="toc-number">1.1.</span> <span class="toc-text">用户管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%B7%BB%E5%8A%A0%E6%96%B0%E7%94%A8%E6%88%B7-useradd-adduser"><span class="toc-number">1.1.1.</span> <span class="toc-text">1. 添加新用户 useradd&#x2F;adduser</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%AE%BE%E7%BD%AE%E7%94%A8%E6%88%B7%E5%8F%A3%E4%BB%A4passwd"><span class="toc-number">1.1.2.</span> <span class="toc-text">2. 设置用户口令passwd</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%89%B9%E9%87%8F%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86"><span class="toc-number">1.1.3.</span> <span class="toc-text">3. 批量用户管理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%B9%E9%87%8F%E5%88%9B%E5%BB%BA%E7%94%A8%E6%88%B7%E5%B8%90%E5%8F%B7"><span class="toc-number">1.1.3.1.</span> <span class="toc-text">批量创建用户帐号</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%B9%E9%87%8F%E8%AE%BE%E7%BD%AE%E5%AF%86%E7%A0%81"><span class="toc-number">1.1.3.2.</span> <span class="toc-text">批量设置密码</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%88%A0%E9%99%A4%E7%94%A8%E6%88%B7"><span class="toc-number">1.1.4.</span> <span class="toc-text">4.删除用户</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E4%BF%AE%E6%94%B9%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF"><span class="toc-number">1.1.5.</span> <span class="toc-text">5.修改用户信息</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%84%E7%AE%A1%E7%90%86"><span class="toc-number">1.2.</span> <span class="toc-text">组管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.2.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E7%B1%BB"><span class="toc-number">1.2.2.</span> <span class="toc-text">分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7"><span class="toc-number">1.2.3.</span> <span class="toc-text">组管理工具</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#groupadd%E6%B7%BB%E5%8A%A0%E7%BB%84"><span class="toc-number">1.2.3.1.</span> <span class="toc-text">groupadd添加组</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#groupdel%E5%88%A0%E9%99%A4%E7%BB%84"><span class="toc-number">1.2.3.2.</span> <span class="toc-text">groupdel删除组</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#groupmod-%E4%BF%AE%E6%94%B9%E7%BB%84"><span class="toc-number">1.2.3.3.</span> <span class="toc-text">groupmod 修改组</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#gpasswd%E8%AE%BE%E7%BD%AE%E7%BB%84%E7%BE%A4%E5%AF%86%E7%A0%81"><span class="toc-number">1.2.3.4.</span> <span class="toc-text">gpasswd设置组群密码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#newgrp%E6%96%B0%E7%BB%84%E5%90%8D"><span class="toc-number">1.2.3.5.</span> <span class="toc-text">newgrp新组名</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E5%92%8C%E7%BB%84%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-number">1.3.</span> <span class="toc-text">用户和组的关系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%83%E4%B9%A0"><span class="toc-number">1.4.</span> <span class="toc-text">练习</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url('https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Maxwaves</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">开源，共享</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script><script>function loadLivere () {
+  if (typeof LivereTower === 'object') {
+    window.LivereTower.init()
+  }
+  else {
+    (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+    })(document, 'script');
+  }
+}
+
+if ('Livere' === 'Livere' || !false) {
+  if (false) btf.loadComment(document.getElementById('lv-container'), loadLivere)
+  else loadLivere()
+}
+else {
+  function loadOtherComment () {
+    loadLivere()
+  }
+}</script></div><div class="aplayer no-destroy" data-id="5183531430" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-preload="none" data-autoplay="false" muted></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/gh/metowolf/MetingJS@1.2/dist/Meting.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start -->
+  <script data-pjax src="https://cdn.jsdelivr.net/gh/Zfour/hexo-github-calendar@1.21/hexo_githubcalendar.js"></script>
+  <script data-pjax>
+        function GithubCalendarConfig(){
+            var git_githubapiurl ="https://python-github-calendar-api.vercel.app/api?Maxwaves";
+            var git_color =['#ebedf0', '#fdcdec', '#fc9bd9', '#fa6ac5', '#f838b2', '#f5089f', '#c4067e', '#92055e', '#540336', '#48022f', '#30021f'];
+            var git_user ="Maxwaves";
+            var parent_div_git = document.getElementById('recent-posts');
+            var git_div_html = '<div class="recent-post-item" style="width:100%;height:auto;padding:10px;"><div id="github_loading" style="width:10%;height:100%;margin:0 auto;display: block"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  viewBox="0 0 50 50" style="enable-background:new 0 0 50 50" xml:space="preserve"><path fill="#d0d0d0" d="M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z" transform="rotate(275.098 25 25)"><animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"></animateTransform></path></svg></div><div id="github_container"></div></div>';
+            if(parent_div_git && location.pathname =='/'){
+                console.log('已挂载github calendar')
+                // parent_div_git.innerHTML=git_div_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",git_div_html) // 有报错，但不影响使用(支持pjax跳转)
+            };
+            GithubCalendar(git_githubapiurl,git_color,git_user)
+        }
+        if(document.getElementById('recent-posts')){
+            GithubCalendarConfig()
+        }
+    </script>
+    <style>#github_container{min-height:280px}@media screen and (max-width:650px) {#github_container{background-image:;min-height:0px}}</style>
+    <style></style><script data-pjax>function electric_clock_injector_config(){
+                var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+                var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img id="card-clock-loading" src="https://cdn.jsdelivr.net/gh/Zfour/Butterfly-clock/clock/images/weather/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading" class="entered loading"></div></div></div></div></div>';
+                console.log('已挂载electric_clock')
+                // parent_div_git.innerHTML=item_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",item_html) // 有报错，但不影响使用(支持pjax跳转)
+            }if( document.getElementsByClassName('sticky_layout')[0] && (location.pathname ==='all'|| 'all' ==='all')){
+
+            electric_clock_injector_config()
+        } </script><script src="https://pv.sohu.com/cityjson?ie=utf-8"></script><script data-pjax  src="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.js"></script><!-- hexo injector body_end end --><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"right","width":140,"height":280},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.8},"log":false});</script></body></html>

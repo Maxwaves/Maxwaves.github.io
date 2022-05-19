@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>linux进程的前台/后台切换</title>
+      <link href="/2022/05/19/linux%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%89%8D%E5%8F%B0-%E5%90%8E%E5%8F%B0%E5%88%87%E6%8D%A2/"/>
+      <url>/2022/05/19/linux%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%89%8D%E5%8F%B0-%E5%90%8E%E5%8F%B0%E5%88%87%E6%8D%A2/</url>
+      
+        <content type="html"><![CDATA[<h1 id="linux进程的前台-后台切换"><a href="#linux进程的前台-后台切换" class="headerlink" title="linux进程的前台/后台切换"></a>linux进程的前台/后台切换</h1><h3 id="1-把程序放到后台运行"><a href="#1-把程序放到后台运行" class="headerlink" title="1. 把程序放到后台运行"></a>1. 把程序放到后台运行</h3><p>在前台运行的程序会一直占用终端命令行，例如你在前台解压的时候必须等着，期间干不了别的事（除非另开一个终端）。<br>但是如果把进程放到后台，可以把终端空出来，你可以执行其它的操作。另一个好处是，放到后台的程序不会被<code>ctrl+C</code>（误触）给终止。</p><h4 id="1-1-一开始就把进程放到后台运行"><a href="#1-1-一开始就把进程放到后台运行" class="headerlink" title="1.1 一开始就把进程放到后台运行"></a>1.1 一开始就把进程放到后台运行</h4><p>直接在命令行末尾加上 &amp;：</p><pre><code>&lt;命令行&gt; &amp;</code></pre><p>例如 python train.py &amp; 可以让train.py脚本一开始就在后台运行。这样运行后终端不会被占用，你仍然可以可以干别的事</p><h4 id="1-2-把已经在前台运行进程放到后台"><a href="#1-2-把已经在前台运行进程放到后台" class="headerlink" title="1.2 把已经在前台运行进程放到后台"></a>1.2 把已经在前台运行进程放到后台</h4><p>如果命令已经在前台运行了，你想把它放到后台：</p><ol><li>先键入<code>Ctrl+z</code> 选项把该进程暂停，放到后台（此时命令行空出来你可以干别的事）；</li><li>键入<code>jobs -l</code>查看进程的工作号（不是进程号PID），比如说工作号是2</li><li>键入 <code>bg %2</code> 即可把该进程放到后台运行（bg=background）。如果直接键入bg则是把所有进程放到后台。<br>如果又想把后台程序放回前台，键入<code>fg %2</code>即可.（fg=foreground）<br>如果直接想杀掉后台进程，键入<code>kill %2</code>，或kill &lt;PID号&gt;也可</li></ol><p>但是，即使把程序放到后台运行，一旦关闭终端，或者远程终端断网，都会直接终止所有进程。<br>对于一些需要长时间运行的程序，或者网络不稳定的情况下，我们希望在关闭终端下程序也照常运行，此时需要<code>nohup</code>命令：</p><ol start="2"><li>使用<code>nohup</code>让程序后台不挂断地运行</li></ol><p>该命令可以在你退出帐户/关闭终端之后继续运行相应的进程。关闭终端后，在另一个终端键入<code>jobs</code>已经无法看到后台的程序了，此时利用ps或top可以查看到。<br><code>nohup</code>常常配合后台标记 &amp;使用：</p><pre><code>nohup &lt;命令&gt; &amp;</code></pre><p>例如<code>nohup python train.py &amp;</code> 可以让train.py脚本一开始就在后台运行，且不会因为关闭终端而被打断。该进程产生的所有输出都会到当前目录下的一个叫nohup.out的文件中。</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Linux </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Linux用户与权限：权限管理</title>
       <link href="/2022/04/24/Linux%E7%94%A8%E6%88%B7%E4%B8%8E%E6%9D%83%E9%99%90%EF%BC%9A%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/"/>
       <url>/2022/04/24/Linux%E7%94%A8%E6%88%B7%E4%B8%8E%E6%9D%83%E9%99%90%EF%BC%9A%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/</url>

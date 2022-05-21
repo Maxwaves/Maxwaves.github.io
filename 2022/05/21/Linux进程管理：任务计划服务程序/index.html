@@ -1,0 +1,411 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Linux进程管理：任务计划服务程序 | ArgsのBlog</title><meta name="keywords" content="Linux"><meta name="author" content="Maxwaves"><meta name="copyright" content="Maxwaves"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Linux进程管理：任务计划服务程序计划任务分为一次性计划任务与长期性计划任务。 1、一次性计划任务：只执行一次，一般用于临时的工作需求。设置执行时间：at 时间 查看已设置好但还未执行的任务：at -l 删除任务：atrm 任务序号 at命令的参数及其作用    参数 作用    -f 指定包含命令的任务文件   -q 指定新任务名称   -l 显示待执行任务列表   -d 删除指定待执行任务">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux进程管理：任务计划服务程序">
+<meta property="og:url" content="http://example.com/2022/05/21/Linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%EF%BC%9A%E4%BB%BB%E5%8A%A1%E8%AE%A1%E5%88%92%E6%9C%8D%E5%8A%A1%E7%A8%8B%E5%BA%8F/index.html">
+<meta property="og:site_name" content="ArgsのBlog">
+<meta property="og:description" content="Linux进程管理：任务计划服务程序计划任务分为一次性计划任务与长期性计划任务。 1、一次性计划任务：只执行一次，一般用于临时的工作需求。设置执行时间：at 时间 查看已设置好但还未执行的任务：at -l 删除任务：atrm 任务序号 at命令的参数及其作用    参数 作用    -f 指定包含命令的任务文件   -q 指定新任务名称   -l 显示待执行任务列表   -d 删除指定待执行任务">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg">
+<meta property="article:published_time" content="2022-05-21T11:36:14.000Z">
+<meta property="article:modified_time" content="2022-05-21T11:37:49.648Z">
+<meta property="article:author" content="Maxwaves">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2022/05/21/Linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%EF%BC%9A%E4%BB%BB%E5%8A%A1%E8%AE%A1%E5%88%92%E6%9C%8D%E5%8A%A1%E7%A8%8B%E5%BA%8F/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":100,"languages":{"author":"作者: Maxwaves","link":"链接: ","source":"来源: ArgsのBlog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'mediumZoom',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Linux进程管理：任务计划服务程序',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-05-21 19:37:49'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.css"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.0.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/touxiang.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">12</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 娱乐</span><i class="fas fa-chevron-down expand hide"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/bangumis/"><i class="fa-fw fas fa-video"></i><span> 追番</span></a></li><li><a class="site-page child" href="/cinemas/"><i class="fa-fw fas fa-desktop"></i><span> 追剧</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-heartbeat"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">ArgsのBlog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 娱乐</span><i class="fas fa-chevron-down expand hide"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/bangumis/"><i class="fa-fw fas fa-video"></i><span> 追番</span></a></li><li><a class="site-page child" href="/cinemas/"><i class="fa-fw fas fa-desktop"></i><span> 追剧</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-heartbeat"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Linux进程管理：任务计划服务程序</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-05-21T11:36:14.000Z" title="发表于 2022-05-21 19:36:14">2022-05-21</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-05-21T11:37:49.648Z" title="更新于 2022-05-21 19:37:49">2022-05-21</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>4分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Linux进程管理：任务计划服务程序"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Linux进程管理：任务计划服务程序"><a href="#Linux进程管理：任务计划服务程序" class="headerlink" title="Linux进程管理：任务计划服务程序"></a>Linux进程管理：任务计划服务程序</h1><p><strong>计划任务</strong>分为<strong>一次性计划任务</strong>与<strong>长期性计划任务。</strong></p>
+<h3 id="1、一次性计划任务：只执行一次，一般用于临时的工作需求。"><a href="#1、一次性计划任务：只执行一次，一般用于临时的工作需求。" class="headerlink" title="1、一次性计划任务：只执行一次，一般用于临时的工作需求。"></a><strong>1、一次性计划任务：</strong>只执行一次，一般用于临时的工作需求。</h3><p>设置执行时间：at 时间</p>
+<p>查看已设置好但还未执行的任务：at -l</p>
+<p>删除任务：atrm 任务序号</p>
+<p>at命令的参数及其作用</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-f</td>
+<td>指定包含命令的任务文件</td>
+</tr>
+<tr>
+<td>-q</td>
+<td>指定新任务名称</td>
+</tr>
+<tr>
+<td><strong>-l</strong></td>
+<td><strong>显示待执行任务列表</strong></td>
+</tr>
+<tr>
+<td>-d</td>
+<td>删除指定待执行任务</td>
+</tr>
+<tr>
+<td>-m</td>
+<td>任务执行后给用户发邮件</td>
+</tr>
+</tbody></table>
+<p>在使用at命令来设置一次性计划任务时，默认采用的是交互式方法。</p>
+<p>例：设置20:30分自动重启，查看设置后的任务，然后删除任务。</p>
+<p><img src="https://img-blog.csdnimg.cn/2021080820291547.png" alt="img"></p>
+<p><strong>注：warning提醒表示at命令只是在告诉我们接下来的任务将由sh解释器负责执行。</strong></p>
+<p>例：可以把前面学习的管道符（任意门）放到两条命令之间，让at命令接收前面echo命令的输出信息，以达到通过非交互式的方式创建计划一次性任务的目的。</p>
+<p>如：<strong>echo “reboot” | at 20:30</strong></p>
+<p><img src="https://img-blog.csdnimg.cn/20210808203259569.png" alt="img"></p>
+<p>例：把计划任务写入到Shell脚本中，当用户激活后再开始倒计时执行，可以使用“at now +2 MINUTE”的方式操作，这样代表2分钟（MINUTE）后执行这个任务，也可以替代成小时（HOUR）、日（DAY）、月（MONTH）等词汇：</p>
+<p><strong>at now +2 MINUTE</strong></p>
+<ul>
+<li><p>时间的表示方法：</p>
+<p>绝对表示方法： </p>
+</li>
+</ul>
+<ol>
+<li>midnight //当天午夜 </li>
+<li>noon //当天中午 </li>
+<li>teatime //当天下午4点 </li>
+<li>hh:mm mm/dd/yy  </li>
+</ol>
+<p>​        相对表示方法：  </p>
+<ol>
+<li>now+n minutes //从现在起向后n分钟 </li>
+<li>now+n days //从现在起向后n天 </li>
+<li>now+n hours //从现在起向后n小时 </li>
+<li>now+n weeks //从现在起向后n周</li>
+</ol>
+<h3 id="2、长期性计划任务：周期性地、有规律地执行某些具体的任务。"><a href="#2、长期性计划任务：周期性地、有规律地执行某些具体的任务。" class="headerlink" title="2、长期性计划任务：周期性地、有规律地执行某些具体的任务。"></a><strong>2、长期性计划任务：</strong>周期性地、有规律地执行某些具体的任务。</h3><p>创建、编辑计划任务：crontab -e</p>
+<p>查看当前计划任务：crontab -l</p>
+<p>删除某条计划任务：crontab -r</p>
+<p>以管理员的身份登录，可以在编辑他人的计划任务：crontab -u</p>
+<p>crontab命令的参数及其作用如下所示。</p>
+<p>​                       crontab命令的参数及其作用</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-e</td>
+<td>编辑计划任务</td>
+</tr>
+<tr>
+<td>-u</td>
+<td>指定用户名称</td>
+</tr>
+<tr>
+<td>-l</td>
+<td>列出任务列表</td>
+</tr>
+<tr>
+<td>-r</td>
+<td>删除计划任务</td>
+</tr>
+</tbody></table>
+<p>使用crond服务设置任务的参数格式：<strong>分、时、日、月、星期 命令</strong></p>
+<p><strong>注：如果有些字段没有被设置，则需要使用星号（*）占位。</strong></p>
+<p>使用crond设置任务的参数字段说明</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>分钟</td>
+<td>取值为0～59的整数</td>
+</tr>
+<tr>
+<td>小时</td>
+<td>取值为0～23的任意整数</td>
+</tr>
+<tr>
+<td>日期</td>
+<td>取值为1～31的任意整数</td>
+</tr>
+<tr>
+<td>月份</td>
+<td>取值为1～12的任意整数</td>
+</tr>
+<tr>
+<td>星期</td>
+<td>取值为0～7的任意整数，其中0与7均为星期日</td>
+</tr>
+<tr>
+<td>命令</td>
+<td>要执行的命令或程序脚本</td>
+</tr>
+</tbody></table>
+<p>例：在每周一、三、五的凌晨3点25分，都需要使用tar命令把某个网站的数据目录进行打包处理，使其作为一个备份文件。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210808210904841.png" alt="img"></p>
+<p><strong>注：</strong></p>
+<p>用逗号<strong>“,”</strong>来分别表示多个时间段，例如“8,9,12”表示8月、9月和12月。</p>
+<p>用减号<strong>“-”</strong>来表示一段连续的时间周期（例如字段“日”的取值为“12-15”，则表示每月的12～15日）。</p>
+<p>用除号<strong>“/”</strong>表示执行任务的间隔时间（例如“*/2”表示每隔2分钟执行一次任务）。</p>
+<p><strong>在crond服务中需要同时包含多条计划任务的命令语句，应每行仅写一条。</strong>例如再添加一条计划任务，它的功能是每周一至周五的凌晨1点钟自动清空/tmp目录内的所有文件。</p>
+<p>尤其需要注意的是，在crond服务的计划任务参数中，所有命令<strong>一定要用绝对路径的方式</strong>来写，如果不知道绝对路径，请用whereis命令进行查询，rm命令路径为下面输出信息中加粗部分。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210808211410913.png" alt="img"></p>
+<p>删除定时任务：</p>
+<p><img src="https://img-blog.csdnimg.cn/20210808211809931.png" alt="img"></p>
+<p>还可以直接编辑配置文件达到设置定时任务的目的：</p>
+<p>vim /etc/crontab</p>
+<p><img src="https://img-blog.csdnimg.cn/20210808211918549.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyNDI4NzIx,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p>缺点是直接编辑文件没有提示，使用crontab 命令若写错会有提示。</p>
+<p>例子：</p>
+<p><strong>列出crontab</strong> </p>
+<p>以root用户列出zhangsan 的crontab </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#crontab –u zhangsan –l </span><br></pre></td></tr></table></figure>
+
+<p>以普通用户zhangsan列出自己的crontab </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$crontab –l </span><br></pre></td></tr></table></figure>
+
+<p>对/var/spool/cron/zhangsan文件备份 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$crontab –l &gt;/home/zhangsan/zhangsancron </span><br><span class="line">$ls /home/zhangsan/zhangsancron</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>删除crontab</strong>  </p>
+<p>删除crontab也会删除/var/spool/cron目录中指定用户的文件 </p>
+<p>以用户root删除zhangsan的crontab文件 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#crontab –u zhangsan -r </span><br></pre></td></tr></table></figure>
+
+<p>以普通用户zhangsan删除自己的crontab文件 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$crontab -r</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>恢复丢失的crontab文件</strong></p>
+<p>如果不小心误删除了crontab文件，且在主目录下还有一个备份，那么可 以将其复制到/var/spool/cron/username（具体用户），如果由于权限问 题无法复制可以使用crontab命令解决 </p>
+<p>以zhangsan用户登录恢复丢失的crontab文件 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$crontab –r </span><br></pre></td></tr></table></figure>
+
+<p>删除文件 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$crontab –l  </span><br><span class="line">$crontab /home/zhangsan/zhangsancron </span><br></pre></td></tr></table></figure>
+
+<p>恢复丢失的文件，恢复后可以看到文件信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$crontab –l </span><br></pre></td></tr></table></figure>
+
+
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Maxwaves</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2022/05/21/Linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%EF%BC%9A%E4%BB%BB%E5%8A%A1%E8%AE%A1%E5%88%92%E6%9C%8D%E5%8A%A1%E7%A8%8B%E5%BA%8F/">http://example.com/2022/05/21/Linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%EF%BC%9A%E4%BB%BB%E5%8A%A1%E8%AE%A1%E5%88%92%E6%9C%8D%E5%8A%A1%E7%A8%8B%E5%BA%8F/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">ArgsのBlog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Linux/">Linux</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat.jpg"/></a><div class="post-qr-code-desc"></div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2022/05/19/linux%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%89%8D%E5%8F%B0-%E5%90%8E%E5%8F%B0%E5%88%87%E6%8D%A2/"><img class="next-cover" src="https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">linux进程的前台/后台切换</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/03/17/Linux%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4/" title="Linux基本命令"><img class="cover" src="https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-17</div><div class="title">Linux基本命令</div></div></a></div><div><a href="/2022/04/23/Linux%E6%96%87%E4%BB%B6%E4%B8%8E%E7%9B%AE%E5%BD%95%E7%AE%A1%E7%90%86%EF%BC%9A%E5%8E%8B%E7%BC%A9%E3%80%81%E9%87%8D%E5%AE%9A%E5%90%91%E4%B8%8E%E7%AE%A1%E9%81%93/" title="Linux文件与目录管理：压缩、重定向与管道"><img class="cover" src="https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-23</div><div class="title">Linux文件与目录管理：压缩、重定向与管道</div></div></a></div><div><a href="/2022/03/23/Linux%E6%96%87%E4%BB%B6%E4%B8%8E%E7%9B%AE%E5%BD%95%E7%AE%A1%E7%90%86%EF%BC%9A%E6%96%87%E4%BB%B6%E4%B8%8E%E6%9F%A5%E6%89%BE/" title="Linux文件与目录管理：文件与查找"><img class="cover" src="https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-23</div><div class="title">Linux文件与目录管理：文件与查找</div></div></a></div><div><a href="/2022/04/23/Linux%E6%96%87%E4%BB%B6%E4%B8%8E%E7%9B%AE%E5%BD%95%E7%AE%A1%E7%90%86%EF%BC%9A%E6%96%87%E6%9C%AC%E5%86%85%E5%AE%B9%E6%98%BE%E7%A4%BA%E4%B8%8E%E5%A4%84%E7%90%86/" title="Linux文件与目录管理：文本内容显示与处理"><img class="cover" src="https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-23</div><div class="title">Linux文件与目录管理：文本内容显示与处理</div></div></a></div><div><a href="/2022/04/24/Linux%E7%94%A8%E6%88%B7%E4%B8%8E%E6%9D%83%E9%99%90%EF%BC%9A%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86/" title="Linux用户与权限：用户与组管理"><img class="cover" src="https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-24</div><div class="title">Linux用户与权限：用户与组管理</div></div></a></div><div><a href="/2022/04/24/Linux%E7%94%A8%E6%88%B7%E4%B8%8E%E6%9D%83%E9%99%90%EF%BC%9A%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/" title="Linux用户与权限：权限管理"><img class="cover" src="https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-24</div><div class="title">Linux用户与权限：权限管理</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="lv-container" data-id="city" data-uid="MTAyMC81NTE4NC8zMTY1MQ=="></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%EF%BC%9A%E4%BB%BB%E5%8A%A1%E8%AE%A1%E5%88%92%E6%9C%8D%E5%8A%A1%E7%A8%8B%E5%BA%8F"><span class="toc-number">1.</span> <span class="toc-text">Linux进程管理：任务计划服务程序</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81%E4%B8%80%E6%AC%A1%E6%80%A7%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%EF%BC%9A%E5%8F%AA%E6%89%A7%E8%A1%8C%E4%B8%80%E6%AC%A1%EF%BC%8C%E4%B8%80%E8%88%AC%E7%94%A8%E4%BA%8E%E4%B8%B4%E6%97%B6%E7%9A%84%E5%B7%A5%E4%BD%9C%E9%9C%80%E6%B1%82%E3%80%82"><span class="toc-number">1.0.1.</span> <span class="toc-text">1、一次性计划任务：只执行一次，一般用于临时的工作需求。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E3%80%81%E9%95%BF%E6%9C%9F%E6%80%A7%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1%EF%BC%9A%E5%91%A8%E6%9C%9F%E6%80%A7%E5%9C%B0%E3%80%81%E6%9C%89%E8%A7%84%E5%BE%8B%E5%9C%B0%E6%89%A7%E8%A1%8C%E6%9F%90%E4%BA%9B%E5%85%B7%E4%BD%93%E7%9A%84%E4%BB%BB%E5%8A%A1%E3%80%82"><span class="toc-number">1.0.2.</span> <span class="toc-text">2、长期性计划任务：周期性地、有规律地执行某些具体的任务。</span></a></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url('https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Maxwaves</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">开源，共享</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script><script>function loadLivere () {
+  if (typeof LivereTower === 'object') {
+    window.LivereTower.init()
+  }
+  else {
+    (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+    })(document, 'script');
+  }
+}
+
+if ('Livere' === 'Livere' || !false) {
+  if (false) btf.loadComment(document.getElementById('lv-container'), loadLivere)
+  else loadLivere()
+}
+else {
+  function loadOtherComment () {
+    loadLivere()
+  }
+}</script></div><div class="aplayer no-destroy" data-id="5183531430" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-preload="none" data-autoplay="false" muted></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/gh/metowolf/MetingJS@1.2/dist/Meting.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start -->
+  <script data-pjax src="https://cdn.jsdelivr.net/gh/Zfour/hexo-github-calendar@1.21/hexo_githubcalendar.js"></script>
+  <script data-pjax>
+        function GithubCalendarConfig(){
+            var git_githubapiurl ="https://python-github-calendar-api.vercel.app/api?Maxwaves";
+            var git_color =['#ebedf0', '#fdcdec', '#fc9bd9', '#fa6ac5', '#f838b2', '#f5089f', '#c4067e', '#92055e', '#540336', '#48022f', '#30021f'];
+            var git_user ="Maxwaves";
+            var parent_div_git = document.getElementById('recent-posts');
+            var git_div_html = '<div class="recent-post-item" style="width:100%;height:auto;padding:10px;"><div id="github_loading" style="width:10%;height:100%;margin:0 auto;display: block"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  viewBox="0 0 50 50" style="enable-background:new 0 0 50 50" xml:space="preserve"><path fill="#d0d0d0" d="M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z" transform="rotate(275.098 25 25)"><animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"></animateTransform></path></svg></div><div id="github_container"></div></div>';
+            if(parent_div_git && location.pathname =='/'){
+                console.log('已挂载github calendar')
+                // parent_div_git.innerHTML=git_div_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",git_div_html) // 有报错，但不影响使用(支持pjax跳转)
+            };
+            GithubCalendar(git_githubapiurl,git_color,git_user)
+        }
+        if(document.getElementById('recent-posts')){
+            GithubCalendarConfig()
+        }
+    </script>
+    <style>#github_container{min-height:280px}@media screen and (max-width:650px) {#github_container{background-image:;min-height:0px}}</style>
+    <style></style><script data-pjax>function electric_clock_injector_config(){
+                var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+                var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img id="card-clock-loading" src="https://cdn.jsdelivr.net/gh/Zfour/Butterfly-clock/clock/images/weather/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading" class="entered loading"></div></div></div></div></div>';
+                console.log('已挂载electric_clock')
+                // parent_div_git.innerHTML=item_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",item_html) // 有报错，但不影响使用(支持pjax跳转)
+            }if( document.getElementsByClassName('sticky_layout')[0] && (location.pathname ==='all'|| 'all' ==='all')){
+
+            electric_clock_injector_config()
+        } </script><script src="https://pv.sohu.com/cityjson?ie=utf-8"></script><script data-pjax  src="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.js"></script><!-- hexo injector body_end end --><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"right","width":140,"height":280},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.8},"log":false});</script></body></html>

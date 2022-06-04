@@ -1,0 +1,406 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Shell编程 | ArgsのBlog</title><meta name="keywords" content="Linux"><meta name="author" content="Maxwaves"><meta name="copyright" content="Maxwaves"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="编写shell脚本Shell脚本命令的工作方式有两种：交互式和批处理。  交互式（Interactive）：用户每输入一条命令就立即执行。 批处理（Batch）：由用户事先编写好一个完整的Shell脚本，Shell会一次性执行脚本中诸多的命令。  一、编写简单的脚本SHELL脚本编写： 声明：#!&#x2F;bin&#x2F;bash（用来告诉系统使用哪种Shell解释器来执行该脚本） 注释： #xxxxxx（是对脚">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Shell编程">
+<meta property="og:url" content="http://example.com/2022/06/04/Shell%E7%BC%96%E7%A8%8B/index.html">
+<meta property="og:site_name" content="ArgsのBlog">
+<meta property="og:description" content="编写shell脚本Shell脚本命令的工作方式有两种：交互式和批处理。  交互式（Interactive）：用户每输入一条命令就立即执行。 批处理（Batch）：由用户事先编写好一个完整的Shell脚本，Shell会一次性执行脚本中诸多的命令。  一、编写简单的脚本SHELL脚本编写： 声明：#!&#x2F;bin&#x2F;bash（用来告诉系统使用哪种Shell解释器来执行该脚本） 注释： #xxxxxx（是对脚">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg">
+<meta property="article:published_time" content="2022-06-04T14:22:14.000Z">
+<meta property="article:modified_time" content="2022-06-04T14:23:29.154Z">
+<meta property="article:author" content="Maxwaves">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2022/06/04/Shell%E7%BC%96%E7%A8%8B/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":100,"languages":{"author":"作者: Maxwaves","link":"链接: ","source":"来源: ArgsのBlog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'mediumZoom',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Shell编程',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-06-04 22:23:29'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.css"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.0.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/touxiang.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">13</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 娱乐</span><i class="fas fa-chevron-down expand hide"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/bangumis/"><i class="fa-fw fas fa-video"></i><span> 追番</span></a></li><li><a class="site-page child" href="/cinemas/"><i class="fa-fw fas fa-desktop"></i><span> 追剧</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-heartbeat"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">ArgsのBlog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 娱乐</span><i class="fas fa-chevron-down expand hide"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/bangumis/"><i class="fa-fw fas fa-video"></i><span> 追番</span></a></li><li><a class="site-page child" href="/cinemas/"><i class="fa-fw fas fa-desktop"></i><span> 追剧</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-heartbeat"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Shell编程</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-06-04T14:22:14.000Z" title="发表于 2022-06-04 22:22:14">2022-06-04</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-06-04T14:23:29.154Z" title="更新于 2022-06-04 22:23:29">2022-06-04</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>6分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Shell编程"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="编写shell脚本"><a href="#编写shell脚本" class="headerlink" title="编写shell脚本"></a><strong>编写shell脚本</strong></h1><p>Shell脚本命令的工作方式有两种：交互式和批处理。</p>
+<blockquote>
+<p>交互式（Interactive）：用户每输入一条命令就立即执行。</p>
+<p>批处理（Batch）：由用户事先编写好一个完整的Shell脚本，Shell会一次性执行脚本中诸多的命令。</p>
+</blockquote>
+<h3 id="一、编写简单的脚本"><a href="#一、编写简单的脚本" class="headerlink" title="一、编写简单的脚本"></a><strong>一、编写简单的脚本</strong></h3><p>SHELL脚本编写：</p>
+<p>声明：#!/bin/bash（用来告诉系统使用哪种Shell解释器来执行该脚本）</p>
+<p>注释： #xxxxxx（是对脚本功能和某些命令的介绍信息，使得自己或他人在日后看到这个脚本内容时，可以快速知道该脚本的作用或一些警告信息）</p>
+<p>命令：xxxxxx</p>
+<p>例1：查看当前所在工作路径并列出当前目录下所有的文件及属性信息：</p>
+<p><img src="https://img-blog.csdnimg.cn/20210716142556505.png" alt="img"></p>
+<p> 注：Shell脚本文件的名称可以任意，但为了避免被误以为是普通文件，<strong>建议将.sh后缀加上</strong>，以表示是一个脚本文件。</p>
+<p> 执行上述脚本：</p>
+<p><img src="https://img-blog.csdnimg.cn/20210716143354545.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyNDI4NzIx,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p><strong>执行方式：</strong></p>
+<p>1、bash解释器命令直接运行Shell脚本文件；</p>
+<p>2、通过输入完整路径的方式来执行。但默认会因为权限不足而提示报错信息，此时只需要为脚本文件增加执行权限即可。</p>
+<h3 id="二、接收用户的参数"><a href="#二、接收用户的参数" class="headerlink" title="二、接收用户的参数"></a>二、接收用户的参数</h3><p>上述脚本程序只能执行一些预先定义好的功能，为了让Shell脚本程序更好地满足用户的一些实时需求，以便灵活完成工作，必须要让脚本程序能够像之前执行命令时那样，接收用户输入的参数。</p>
+<p>当用户执行某一个命令，加或不加参数的输出结果是不同的。就是说，命令不仅要能接收用户输入的内容，还要有能力进行判断区别，根据不同的输入调用不同的功能。</p>
+<p>Linux系统中的Shell脚本语言已经内设了用于接收参数的变量，变量之间使用空格间隔。</p>
+<p>例如：</p>
+<p>$0指当前Shell脚本程序的名称；</p>
+<p>$#：指总共有几个参数；</p>
+<p>$*：指所有位置的参数值；</p>
+<p>$?：指显示上一次命令的执行返回值；</p>
+<p>$1、$2、$3……则分别对应着第N个位置的参数值，如下图所示：</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/9edccf5e8d19384b4fc3a7c89bd98b2d.png" alt="第4章 Vim编辑器与Shell命令脚本第4章 Vim编辑器与Shell命令脚本"></p>
+<p>效果如下：</p>
+<p><img src="https://img-blog.csdnimg.cn/20210718234526604.png" alt="img">    <img src="https://img-blog.csdnimg.cn/20210718234531173.png" alt="img"></p>
+<h3 id="三、判断用户的参数"><a href="#三、判断用户的参数" class="headerlink" title="三、判断用户的参数"></a>三、判断用户的参数</h3><p>Shell脚本中的条件测试语法可以判断表达式是否成立，若条件成立则返回数字0，否则便返回非零值。</p>
+<p> <strong>注：条件表达式两边均应有一个空格。</strong></p>
+<p><img src="https://img-blog.csdnimg.cn/2021071823493455.png" alt="img"> </p>
+<p>按照测试对象来划分，条件测试语句可以分为4种：</p>
+<blockquote>
+<p>文件测试语句；</p>
+<p>逻辑测试语句；</p>
+<p>整数值比较语句；</p>
+<p>字符串比较语句。</p>
+</blockquote>
+<p><strong>1、文件测试：</strong>即使用指定条件来判断文件是否存在或权限是否满足等情况的运算符，具体的参数如下表：</p>
+<p>​                          文件测试所用的参数</p>
+<table>
+<thead>
+<tr>
+<th>操作符</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-d</td>
+<td>测试文件是否为目录类型</td>
+</tr>
+<tr>
+<td>-e</td>
+<td>测试文件是否存在</td>
+</tr>
+<tr>
+<td>-f</td>
+<td>判断是否为一般文件</td>
+</tr>
+<tr>
+<td>-r</td>
+<td>测试当前用户是否有权限读取</td>
+</tr>
+<tr>
+<td>-w</td>
+<td>测试当前用户是否有权限写入</td>
+</tr>
+<tr>
+<td>-x</td>
+<td>测试当前用户是否有权限执行</td>
+</tr>
+</tbody></table>
+<p>例1：判断/etc/fstab是否为一个目录类型的文件，通过Shell解释器的内设$?变量显示上一条命令执行后的返回值。<strong>返回值为0，则目录存在。</strong></p>
+<p><img src="https://img-blog.csdnimg.cn/20210718235214401.png" alt="img">  <img src="https://img-blog.csdnimg.cn/20210718235345335.png" alt="img"></p>
+<p><strong>2、逻辑测试语句：</strong>对测试结果进行逻辑分析；</p>
+<p>&amp;&amp;：逻辑“与”，表示当前面的命令执行成功后才会执行它后面的命令；</p>
+<p>||：逻辑“或”，表示当前面的命令执行失败后才会执行它后面的命令；</p>
+<p>！：逻辑“非”，表示把条件测试中的判断结果取相反值。如果原本测试的结果是正确的，则将其变成错误的；原本测试错误的结果则将其变成正确的。</p>
+<p>例：判断/dev/cdrom文件是否存在，若存在则输出Exist字样。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210718235646142.png" alt="img"></p>
+<p>例：结合系统环境变量USER来判断当前登录的用户是否为非管理员身份。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210718235905867.png" alt="img"></p>
+<p><img src="https://img-blog.csdnimg.cn/20210718235914505.png" alt="img"></p>
+<p>注：叹号应该加到判断语句的前面，代表对整个的测试语句进行取反值操作，不应该写成“$USER != root”，因为!=代表的是不等于符号≠。</p>
+<p><strong>3、整数值比较语句：不能将数字与字符串、文件等内容一起操作</strong>，可用的整数比较运算符如下表所示：</p>
+<table>
+<thead>
+<tr>
+<th>操作符</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-eq</td>
+<td>是否等于</td>
+</tr>
+<tr>
+<td>-ne</td>
+<td>是否不等于</td>
+</tr>
+<tr>
+<td>-gt</td>
+<td>是否大于</td>
+</tr>
+<tr>
+<td>-lt</td>
+<td>是否小于</td>
+</tr>
+<tr>
+<td>-le</td>
+<td>是否等于或小于</td>
+</tr>
+<tr>
+<td>-ge</td>
+<td>是否大于或等于</td>
+</tr>
+</tbody></table>
+<p>例：使用free -m命令查看内存使用量情况（单位为MB），然后通过grep Mem:命令过滤出剩余内存量的行，再用awk ‘{print $4}’命令只保留第四列：</p>
+<p><img src="https://img-blog.csdnimg.cn/20210719000724188.png" alt="img"></p>
+<p><strong>注：字母无法与数字进行大小比较，例如，“a是否大于等于3”是完全错误的，无法比较大小。</strong></p>
+<p><strong>4、字符串比较语句：</strong>用于判断测试字符串是否为空值，或两个字符串是否相同。<strong>经常用来判断某个变量是否未被定义（即内容为空值）。</strong></p>
+<p>常见的字符串比较运算符：</p>
+<table>
+<thead>
+<tr>
+<th>操作符</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>=</td>
+<td>比较字符串内容是否相同</td>
+</tr>
+<tr>
+<td>!=</td>
+<td>比较字符串内容是否不同</td>
+</tr>
+<tr>
+<td>-z</td>
+<td>判断字符串内容是否为空</td>
+</tr>
+</tbody></table>
+<p> 例：通过判断String变量是否为空值，进而判断是否定义了这个变量：</p>
+<p> <img src="https://img-blog.csdnimg.cn/20210719001146466.png" alt="img"></p>
+<p> 例：结合逻辑运算符，当用于保存当前语系的环境变量值LANG不是英语（en.US）时，则会满足逻辑测试条件并输出“Not en.US”（非英语）的字样：</p>
+<p><img src="https://img-blog.csdnimg.cn/20210719001632420.png" alt="img"></p>
+<h3 id="四、流程控制语句"><a href="#四、流程控制语句" class="headerlink" title="四、流程控制语句"></a>四、流程控制语句</h3><p><strong>1、if条件测试语句：</strong>分为<strong>单分支结构</strong>、<strong>双分支结构</strong>、<strong>多分支结构</strong>；</p>
+<p>例：<strong>单分支</strong>的if条件语句来判断/media/cdrom目录是否存在，若不存在就创建这个目录，反之则结束条件判断和整个Shell脚本。</p>
+<p><img src="https://img-blog.csdnimg.cn/2021071900183978.png" alt="img"><img src="https://img-blog.csdnimg.cn/20210719001909205.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyNDI4NzIx,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p>例：使用<strong>双分支</strong>的if条件语句来验证某台主机是否在线：通过-c参数来规定尝试的次数，并使用-i参数定义每个数据包的发送间隔，以及使用-W参数定义等待超时时间。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210719002012591.png" alt="img"></p>
+<p> 注：**/dev/null 黑洞文件**，把输出信息重定向到这个文件等同于删除数据（类似于没有回收功能的垃圾箱），可以让用户的屏幕窗口保持简洁。</p>
+<p> 例：使用多分支的if条件语句来判断用户输入的分数在哪个成绩区间内。</p>
+<p> read是用来读取用户输入信息的命令，能够把接收到的用户输入信息赋值给后面的指定变量，-p参数用于给予用户一些提示信息。</p>
+<p> <img src="https://img-blog.csdnimg.cn/20210719002239678.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyNDI4NzIx,size_16,color_FFFFFF,t_70" alt="img">  <img src="https://img-blog.csdnimg.cn/20210719002245293.png" alt="img"></p>
+<p> <strong>2、for条件循环语句</strong></p>
+<p> 例：使用for循环语句从列表文件中读取多个用户名，然后为其逐一创建用户账户并设置密码。首先创建用户名称的列表文件users.txt，每个用户名称单独一行。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210719002438183.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyNDI4NzIx,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p><img src="https://img-blog.csdnimg.cn/20210719002400854.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyNDI4NzIx,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p><img src="https://img-blog.csdnimg.cn/20210719002653156.png" alt="img"> <img src="https://img-blog.csdnimg.cn/20210719003005419.png" alt="img"></p>
+<p>例：让脚本从主机列表文件ipaddrs.txt中自动读取IP地址，通过判断ping命令执行后的返回值来逐个测试主机是否在线。</p>
+<p> <img src="https://img-blog.csdnimg.cn/20210719003347939.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyNDI4NzIx,size_16,color_FFFFFF,t_70" alt="img">   <img src="https://img-blog.csdnimg.cn/20210719003411334.png" alt="img"></p>
+<p><strong>3、while条件循环语句</strong></p>
+<p>例：编写一个用来<strong>猜测数值大小</strong>的脚本。该脚本使用**$RANDOM<strong>变量来调取出一个随机的数值（范围为0～32767），将这个随机数对1000进行取余操作，并使用</strong>expr命令**取得其结果，再用这个数值与用户通过read命令输入的数值进行比较判断。</p>
+<p>while条件循环语句中的条件测试始终为true，因此判断语句会无限执行下去，直到用户输入的数值等于expr命令取得的数值后，这两者相等之后才运行exit 0命令，终止脚本的执行。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210719003634453.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyNDI4NzIx,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p><img src="https://img-blog.csdnimg.cn/20210719003641140.png" alt="img">  <img src="https://img-blog.csdnimg.cn/20210719003646284.png" alt="img"></p>
+<p><strong>4、case条件测试语句</strong></p>
+<p> 例：在脚本中组合使用case条件测试语句和通配符，提示用户输入一个字符并将其赋值给变量KEY，然后根据变量KEY的值向用户显示其值是字母、数字还是其他字符。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210719003828377.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyNDI4NzIx,size_16,color_FFFFFF,t_70" alt="img">   <img src="https://img-blog.csdnimg.cn/20210719003833855.png" alt="img"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Maxwaves</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2022/06/04/Shell%E7%BC%96%E7%A8%8B/">http://example.com/2022/06/04/Shell%E7%BC%96%E7%A8%8B/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">ArgsのBlog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Linux/">Linux</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat.jpg"/></a><div class="post-qr-code-desc"></div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2022/05/21/Linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%EF%BC%9A%E4%BB%BB%E5%8A%A1%E8%AE%A1%E5%88%92%E6%9C%8D%E5%8A%A1%E7%A8%8B%E5%BA%8F/"><img class="next-cover" src="https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Linux进程管理：任务计划服务程序</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/03/17/Linux%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4/" title="Linux基本命令"><img class="cover" src="https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-17</div><div class="title">Linux基本命令</div></div></a></div><div><a href="/2022/04/23/Linux%E6%96%87%E4%BB%B6%E4%B8%8E%E7%9B%AE%E5%BD%95%E7%AE%A1%E7%90%86%EF%BC%9A%E5%8E%8B%E7%BC%A9%E3%80%81%E9%87%8D%E5%AE%9A%E5%90%91%E4%B8%8E%E7%AE%A1%E9%81%93/" title="Linux文件与目录管理：压缩、重定向与管道"><img class="cover" src="https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-23</div><div class="title">Linux文件与目录管理：压缩、重定向与管道</div></div></a></div><div><a href="/2022/03/23/Linux%E6%96%87%E4%BB%B6%E4%B8%8E%E7%9B%AE%E5%BD%95%E7%AE%A1%E7%90%86%EF%BC%9A%E6%96%87%E4%BB%B6%E4%B8%8E%E6%9F%A5%E6%89%BE/" title="Linux文件与目录管理：文件与查找"><img class="cover" src="https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-23</div><div class="title">Linux文件与目录管理：文件与查找</div></div></a></div><div><a href="/2022/04/23/Linux%E6%96%87%E4%BB%B6%E4%B8%8E%E7%9B%AE%E5%BD%95%E7%AE%A1%E7%90%86%EF%BC%9A%E6%96%87%E6%9C%AC%E5%86%85%E5%AE%B9%E6%98%BE%E7%A4%BA%E4%B8%8E%E5%A4%84%E7%90%86/" title="Linux文件与目录管理：文本内容显示与处理"><img class="cover" src="https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-23</div><div class="title">Linux文件与目录管理：文本内容显示与处理</div></div></a></div><div><a href="/2022/04/24/Linux%E7%94%A8%E6%88%B7%E4%B8%8E%E6%9D%83%E9%99%90%EF%BC%9A%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/" title="Linux用户与权限：权限管理"><img class="cover" src="https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-24</div><div class="title">Linux用户与权限：权限管理</div></div></a></div><div><a href="/2022/04/24/Linux%E7%94%A8%E6%88%B7%E4%B8%8E%E6%9D%83%E9%99%90%EF%BC%9A%E7%94%A8%E6%88%B7%E4%B8%8E%E7%BB%84%E7%AE%A1%E7%90%86/" title="Linux用户与权限：用户与组管理"><img class="cover" src="https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-24</div><div class="title">Linux用户与权限：用户与组管理</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="lv-container" data-id="city" data-uid="MTAyMC81NTE4NC8zMTY1MQ=="></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BC%96%E5%86%99shell%E8%84%9A%E6%9C%AC"><span class="toc-number">1.</span> <span class="toc-text">编写shell脚本</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E7%BC%96%E5%86%99%E7%AE%80%E5%8D%95%E7%9A%84%E8%84%9A%E6%9C%AC"><span class="toc-number">1.0.1.</span> <span class="toc-text">一、编写简单的脚本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%8E%A5%E6%94%B6%E7%94%A8%E6%88%B7%E7%9A%84%E5%8F%82%E6%95%B0"><span class="toc-number">1.0.2.</span> <span class="toc-text">二、接收用户的参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%88%A4%E6%96%AD%E7%94%A8%E6%88%B7%E7%9A%84%E5%8F%82%E6%95%B0"><span class="toc-number">1.0.3.</span> <span class="toc-text">三、判断用户的参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6%E8%AF%AD%E5%8F%A5"><span class="toc-number">1.0.4.</span> <span class="toc-text">四、流程控制语句</span></a></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url('https://s2.loli.net/2022/02/20/ytp8Y463aNILwdc.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Maxwaves</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">开源，共享</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script><script>function loadLivere () {
+  if (typeof LivereTower === 'object') {
+    window.LivereTower.init()
+  }
+  else {
+    (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+    })(document, 'script');
+  }
+}
+
+if ('Livere' === 'Livere' || !false) {
+  if (false) btf.loadComment(document.getElementById('lv-container'), loadLivere)
+  else loadLivere()
+}
+else {
+  function loadOtherComment () {
+    loadLivere()
+  }
+}</script></div><div class="aplayer no-destroy" data-id="5183531430" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-preload="none" data-autoplay="false" muted></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/gh/metowolf/MetingJS@1.2/dist/Meting.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start -->
+  <script data-pjax src="https://cdn.jsdelivr.net/gh/Zfour/hexo-github-calendar@1.21/hexo_githubcalendar.js"></script>
+  <script data-pjax>
+        function GithubCalendarConfig(){
+            var git_githubapiurl ="https://python-github-calendar-api.vercel.app/api?Maxwaves";
+            var git_color =['#ebedf0', '#fdcdec', '#fc9bd9', '#fa6ac5', '#f838b2', '#f5089f', '#c4067e', '#92055e', '#540336', '#48022f', '#30021f'];
+            var git_user ="Maxwaves";
+            var parent_div_git = document.getElementById('recent-posts');
+            var git_div_html = '<div class="recent-post-item" style="width:100%;height:auto;padding:10px;"><div id="github_loading" style="width:10%;height:100%;margin:0 auto;display: block"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  viewBox="0 0 50 50" style="enable-background:new 0 0 50 50" xml:space="preserve"><path fill="#d0d0d0" d="M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z" transform="rotate(275.098 25 25)"><animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"></animateTransform></path></svg></div><div id="github_container"></div></div>';
+            if(parent_div_git && location.pathname =='/'){
+                console.log('已挂载github calendar')
+                // parent_div_git.innerHTML=git_div_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",git_div_html) // 有报错，但不影响使用(支持pjax跳转)
+            };
+            GithubCalendar(git_githubapiurl,git_color,git_user)
+        }
+        if(document.getElementById('recent-posts')){
+            GithubCalendarConfig()
+        }
+    </script>
+    <style>#github_container{min-height:280px}@media screen and (max-width:650px) {#github_container{background-image:;min-height:0px}}</style>
+    <style></style><script data-pjax>function electric_clock_injector_config(){
+                var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+                var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img id="card-clock-loading" src="https://cdn.jsdelivr.net/gh/Zfour/Butterfly-clock/clock/images/weather/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading" class="entered loading"></div></div></div></div></div>';
+                console.log('已挂载electric_clock')
+                // parent_div_git.innerHTML=item_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",item_html) // 有报错，但不影响使用(支持pjax跳转)
+            }if( document.getElementsByClassName('sticky_layout')[0] && (location.pathname ==='all'|| 'all' ==='all')){
+
+            electric_clock_injector_config()
+        } </script><script src="https://pv.sohu.com/cityjson?ie=utf-8"></script><script data-pjax  src="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.js"></script><!-- hexo injector body_end end --><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"right","width":140,"height":280},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.8},"log":false});</script></body></html>
